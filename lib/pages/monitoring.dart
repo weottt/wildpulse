@@ -23,7 +23,7 @@ class _MonitoringFeedPageState extends State<MonitoringFeedPage> {
   Future<void> _fetchFeedItems() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.1.112:3000/api/images'),
+        Uri.parse('http://192.168.22.85:3000/api/images'),
       );
 
       if (response.statusCode == 200) {

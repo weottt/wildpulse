@@ -61,7 +61,7 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 
   void initSocket() {
-    socket = IO.io('http://192.168.1.112:3000', <String, dynamic>{
+    socket = IO.io('http:// 192.168.22.85:3000', <String, dynamic>{
       'transports': ['websocket'],
     });
 
@@ -96,7 +96,7 @@ class _NotificationPageState extends State<NotificationPage> {
   Future<void> fetchInitialImage() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.1.112:3000/api/images'),
+        Uri.parse('http://192.168.22.85:3000/api/images'),
       );
 
       if (response.statusCode == 200) {

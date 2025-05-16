@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
 
 class WebSocketPage extends StatelessWidget {
   final WebSocketChannel channel = IOWebSocketChannel.connect(
-    'ws://192.168.1.112:3000', // Replace with your actual IP and port
+    'ws:// 192.168.22.85:3000', // Replace with your actual IP and port
   );
 
   @override

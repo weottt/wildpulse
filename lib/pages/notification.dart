@@ -3,6 +3,8 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
 
@@ -14,11 +16,48 @@ class _NotificationPageState extends State<NotificationPage> {
   late IO.Socket socket;
   String imageUrl = '';
 
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
   @override
   void initState() {
     super.initState();
+    initNotifications(); // Initialize notifications
     fetchInitialImage();
     initSocket();
+  }
+
+  void initNotifications() {
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  Future<void> showNotification(String title, String body) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+          'image_channel',
+          'Image Notifications',
+          channelDescription: 'Notification channel for image uploads',
+          importance: Importance.max,
+          priority: Priority.high,
+          ticker: 'ticker',
+        );
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+    );
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      platformChannelSpecifics,
+      payload: 'image_payload',
+    );
   }
 
   void initSocket() {
@@ -35,6 +74,9 @@ class _NotificationPageState extends State<NotificationPage> {
       setState(() {
         imageUrl = data['url'];
       });
+
+      // Show push notification
+      showNotification('New Image Received', 'A new image was uploaded.');
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
